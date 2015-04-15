@@ -17,9 +17,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.querydsl.core.types.ConstantImpl;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.JavaTemplates;
+import com.querydsl.core.support.SerializerBase;
+import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
@@ -35,11 +34,34 @@ public class SerializerBaseTest {
         // operation
         serializer.handle(strPath.isNotNull());
         // long path
-        serializer.handle(new PathBuilder<Object>(Object.class,"p").getList("l",Map.class).get(0));
+        serializer.handle(new PathBuilder<Object>(Object.class, "p").getList("l", Map.class).get(0));
         // constant
         serializer.handle(ConstantImpl.create(""));
         //  custom
         serializer.handle(ExpressionUtils.template(Object.class, "xxx", ConstantImpl.create("")));
+    }
+
+}
+
+class DummySerializer extends SerializerBase<DummySerializer> {
+
+    public DummySerializer(Templates templates) {
+        super(templates);
+    }
+
+    @Override
+    public Void visit(SubQueryExpression<?> query, Void context) {
+        return null;
+    }
+
+    @Override
+    public Void visit(FactoryExpression<?> expr, Void context) {
+        return null;
+    }
+
+    @Override
+    public Void visit(ParamExpression<?> expr, Void context) {
+        return null;
     }
 
 }
